@@ -16,6 +16,7 @@ sys.path.append(os.path.abspath(__file__))
 from tf_train_ops import get_bn_decay
 import config_utils
 from data import farthest_points, distance_by_translation_point, preprocess_pc_for_inference, regularize_pc_point_count, depth2pc, reject_median_outliers
+from logger import logger
 
 class GraspEstimator:
     """
@@ -255,7 +256,7 @@ class GraspEstimator:
         else:
             pc_full = regularize_pc_point_count(pc_full, self._contact_grasp_cfg['DATA']['raw_num_points'])
             pred_grasps_cam[-1], scores[-1], contact_pts[-1], gripper_openings[-1] = self.predict_grasps(sess, pc_full, convert_cam_coords=True, forward_passes=forward_passes)
-            print('Generated {} grasps'.format(len(pred_grasps_cam[-1])))
+            logger.info('Generated {} grasps'.format(len(pred_grasps_cam[-1])))
 
         # Filter grasp contacts to lie within object segment
         if filter_grasps:
@@ -274,7 +275,7 @@ class GraspEstimator:
                         print('skipped gripper openings {}'.format(gripper_openings[j]))
 
                     if local_regions and np.any(pred_grasps_cam[k]):
-                        print('Generated {} grasps for object {}'.format(len(pred_grasps_cam[k]), k))
+                        logger.info('Generated {} grasps for object {}'.format(len(pred_grasps_cam[k]), k))
                 else:
                     print('skipping obj {} since  np.any(pc_segments[k]) {} and np.any(contact_pts[j]) is {}'.format(k, np.any(pc_segments[k]), np.any(contact_pts[j])))
 
