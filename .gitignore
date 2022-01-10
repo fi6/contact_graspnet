@@ -4,3 +4,4 @@ checkpoints/*
 **/*.pyc
 **/__pycache__
 .vscode
+.venv
